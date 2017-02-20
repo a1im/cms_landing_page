@@ -1,0 +1,15 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+*[class|='alm-elem'] {
+	position: absolute;
+}
+
+.alm-elem-block-screen {
+	position: relative;
+	width:100%; 
+	height:500px; 
+	background-color:#e1f155;
+}

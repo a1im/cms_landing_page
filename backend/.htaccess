@@ -1,0 +1,19 @@
+<IfModule autoindex_module>
+	#запрещаем просмотр содержимого папок
+	Options -Indexes
+</IfModule>
+
+<IfModule rewrite_module>
+	Options +FollowSymLinks
+
+	RewriteEngine on
+	#RewriteBase /
+
+	#RewriteCond %{REQUEST_URI} ^/err.*
+	#RewriteRule ^.*$ http://%{HTTP_HOST}/? [R=404,L]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
