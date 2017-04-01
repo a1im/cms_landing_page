@@ -1,0 +1,53 @@
+*[class|='alm-elem'] {
+	box-sizing: border-box;
+	position: absolute;
+	/* Переход */
+/*	-webkit-transition: all 0.5s ease-out 0.1s;
+	-moz-transition: all 0.5s ease-out 0.1s;
+	-o-transition: all 0.5s ease-out 0.1s;
+	transition: all 0.5s ease-out 0.1s;*/
+}
+
+.alm-elem-block-screen {
+	position: relative;
+	width:100%;
+	height:500px;
+	background-color:#e1f155;
+}
+
+.alm-elem-text {
+	margin: 0;
+	overflow:hidden;
+}
+
+.alm-elem-menu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	text-align: center;
+	width: 100%;
+}
+.alm-elem-menu ul.nav li a {
+	/*font-size: 16px;*/
+	/*color: #3e3e3e;*/
+	/*background-color: none;*/
+}
+.alm-elem-menu ul.nav li a:hover {
+	border-radius: 0;
+}
+
+.alm-elem-form {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	min-width: 100px;
+	min-height: 50px;
+	width: 200px;
+	height: 100px;
+	background-color: #fff;
+}
+
+.alm-elem-input {
+	margin: 0;
+}

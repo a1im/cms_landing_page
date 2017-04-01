@@ -3,13 +3,9 @@
 	padding: 0;
 }
 
-*[class|='alm-elem'] {
-	position: absolute;
-}
-
-.alm-elem-block-screen {
+#site-content {
+	max-width: 1300px;
+	margin: auto;
 	position: relative;
-	width:100%; 
-	height:500px; 
-	background-color:#e1f155;
+	display: block;
 }

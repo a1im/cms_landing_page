@@ -41,10 +41,18 @@ class siteCss extends crud
 	}
 	protected function setPrepareUpdate()
 	{
-		$this->_update = $this->db->prepare("UPDATE `{$this->_table}` SET style=:style WHERE id_site='{$this->_id_site}' AND id_style=:id_style");
+		$this->_update = $this->db->prepare("UPDATE `{$this->_table}` SET style=:style WHERE id_site=:id_site AND id_tag=:id_tag AND selector=:selector");
 	}
 	protected function setPrepareDelete()
 	{
 		$this->_delete = $this->db->prepare("DELETE FROM `{$this->_table}` WHERE id_site='{$this->_id_site}' AND id_style=:id_style");
+	}
+
+	// стили у тега
+	public function readsTag($data)
+	{
+		$style = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE id_site='{$this->_id_site}' AND id_tag=:id_tag");
+		$style->execute($data);
+		return $style->fetchAll(\PDO::FETCH_ASSOC);
 	}
 }

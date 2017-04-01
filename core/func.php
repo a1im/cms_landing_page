@@ -14,3 +14,8 @@ function getPost($name)
 {
 	return (isset($_POST[$name]))?$_POST[$name]:"";
 }
+
+// проверка на JSON
+function isJSON($string) {
+    return ((is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string))))) ? true : false;
+}

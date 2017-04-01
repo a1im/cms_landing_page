@@ -69,9 +69,9 @@ class parsHtmlCssJs extends models
 								$tagsData[$numTag]['id_tag'] = $numTag + $endIdTag;
 								$tagsData[$numTag]['id_site'] = $id_site;
 								$tagsData[$numTag]['name'] = $tagName;
-								$tagsData[$numTag]['selectors'] = $selectors;
+								$tagsData[$numTag]['selectors'] = parsHtmlCssJs::parsSelectors($selectors);
 								$tagsData[$numTag]['parent_tag'] = $stackParentTag[count($stackParentTag)-2];
-								if ($tagsData[$numTag]['parent_tag'] != $parent_tag) 
+								if (sizeof($stackParentTag) > 2) 
 								{
 									$tagsData[$numTag]['parent_tag'] += $endIdTag;
 								}
@@ -140,7 +140,39 @@ class parsHtmlCssJs extends models
 		return $tagsData;
 	}
 
-	public static function parsCss($id_site, $nameTemplate)
+	// парс css текста $style
+	public static function parsStyleCss($id_site, $id_tag, $style)
+	{
+		$cssData = array();
+		if (!empty($style))
+		{
+			$str = "";
+			for($i = 0; $i < mb_strlen($style); $i++)
+			{
+				$chr = $style{$i};
+				switch($chr)
+				{
+					case '{':
+						$cssData[]['selector'] = preg_replace("|[\n\t]|iu", '', $str);
+						$cssData[count($cssData) - 1]['id_site'] = $id_site;
+						$cssData[count($cssData) - 1]['id_tag'] = $id_tag;
+						$str = "";
+						break;
+					case '}':
+						$cssData[count($cssData) - 1]['style'] = preg_replace("|[\n\t]|iu", '', $str);
+						$str = "";
+						break;
+					default:
+						$str .= $chr;
+				}
+			}
+		}
+
+		return $cssData;
+	}
+
+	// парс css файла $nameTemplate
+	public static function parsFileCss($id_site, $nameTemplate)
 	{
 		$cssData = array();
 		$fp = @fopen(PATH_DIR_MVC . DIRSEP . "templates" . DIRSEP . $nameTemplate . ".css", 'r');
@@ -155,7 +187,7 @@ class parsHtmlCssJs extends models
 				switch($chr)
 				{
 					case '{':
-						$cssData[]['selector'] = preg_replace("|[\n\t]|iu", ' ', $str);
+						$cssData[]['selector'] = trim(preg_replace("|[\n\t]|iu", '', $str));
 						$cssData[count($cssData) - 1]['id_site'] = $id_site;
 						$cssData[count($cssData) - 1]['id_tag'] = NULL;
 						$str = "";

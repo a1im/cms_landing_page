@@ -63,7 +63,7 @@ class siteTags extends crud
 	}
 	protected function setPrepareDelete()
 	{
-		$this->_delete = $this->db->prepare("DELETE FROM `{$this->_table}` WHERE id_site='{$this->_id_site}' AND id_tag=:id_tag");
+		$this->_delete = $this->db->prepare("DELETE FROM `{$this->_table}` WHERE id_site='{$this->_id_site}' AND (id_tag=:id_tag OR parent_tag=:id_tag)");
 	}
 
 	// создать тег
@@ -86,6 +86,13 @@ class siteTags extends crud
 	public function updateSelectorsTag($data)
 	{
 		$this->_update = $this->db->prepare("UPDATE `{$this->_table}` SET selectors=:selectors WHERE id_site='{$this->_id_site}' AND id_tag=:id_tag");
+		$result = $this->_update->execute($data);
+		return ($result == 1)?true:false;
+	}
+
+	public function updateContent($data)
+	{
+		$this->_update = $this->db->prepare("UPDATE `{$this->_table}` SET content=:content WHERE id_site='{$this->_id_site}' AND id_tag=:id_tag");
 		$result = $this->_update->execute($data);
 		return ($result == 1)?true:false;
 	}
@@ -165,4 +172,5 @@ class siteTags extends crud
 		$this->_readPosTegs->execute(['parent_tag' => $parent_tag]);
 		return $this->_readPosTegs->fetchAll(\PDO::FETCH_ASSOC);
 	}
+
 }

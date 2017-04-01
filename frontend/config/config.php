@@ -9,6 +9,7 @@ use alimmvc\core\router;
 registry::app()->dir_controllers = DIR_MVC . DIRSEP . 'controllers';
 registry::app()->dir_views = DIR_MVC . DIRSEP . 'views';
 registry::app()->dir_views_layouts = registry::app()->dir_views . DIRSEP . 'layouts';
+registry::app()->path_save_site = PATH_APP_DIR . DIRSEP . 'arhiveSite'; // папка для временных папок и файлов
 
 // Подключаем маршрутизатор URL
 registry::app()->router = new router();

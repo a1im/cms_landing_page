@@ -46,7 +46,7 @@ class mainController extends authController
 					]);
 				registry::app()->siteCssCrud = new siteCss(registry::app()->db, registry::app()->user['id_user'], $id_site);
 				// добавляем стандартные стили
-				$cssData = parsHtmlCssJs::parsCss($id_site, "style-all");
+				$cssData = parsHtmlCssJs::parsFileCss($id_site, "style-all");
 				if (!empty($cssData))
 				{
 					foreach ($cssData as $data) 
