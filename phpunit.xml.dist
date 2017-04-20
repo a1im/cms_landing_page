@@ -10,16 +10,16 @@
 	</testsuite>
 
 	<logging>
-        <log type="coverage-html" target="./frontend/converge/" charset="UTF-8"
+        <log type="coverage-html" target="./public_html/converge/" charset="UTF-8"
             yui="true" highlight="true"
             lowUpperBound="50" highLowerBound="80"/>
     </logging>
 	
 	<filter>
 		<whitelist>
-            <directory>./frontend/models</directory>
+            <directory>./public_html/models</directory>
             <exclude>
-                <directory>./frontend/models/messageForm.php</directory>
+                <directory>./public_html/models/messageForm.php</directory>
             </exclude>
         </whitelist>
 	</filter>

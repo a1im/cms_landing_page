@@ -27,7 +27,7 @@ function autoload($className)
     }
     //$fileName .= str_replace('_', DIRSEP, $className) . '.php';
     $fileName .= $className . '.php';
-
+    // debug($fileName);
     if (!preg_match("/composer/i", $fileName))
         require_once PATH_APP_DIR . DIRSEP . $fileName;
 }
