@@ -1,0 +1,6 @@
+*{margin:0;padding:0;}
+*[id='3']{box-shadow:0px 0px 0px 0px rgb(255,255,255);background-color:rgba(209,152,209,1);}
+*[id='4']{box-shadow:0px 0px 0px 0px rgb(255,255,255);background-color:rgba(145,49,145,0.5);}
+*[id='5']{box-shadow:0px 0px 0px 0px rgb(255,255,255);background-color:rgba(255,255,255,1);}
+*[id='6']{box-shadow:0px 0px 0px 0px rgb(255,255,255);background-color:rgba(173,71,173,0.5);}
+*[id='12'] input{box-shadow:0px 0px 0px 0px rgb(255,255,255);}
