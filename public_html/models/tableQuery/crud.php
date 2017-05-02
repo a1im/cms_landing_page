@@ -49,7 +49,7 @@ abstract class crud extends models
 	public function update($data)
 	{
 		$result = $this->_update->execute($data);
-		return ($result == 1)?true:false;
+		return $result;
 	}
 
 	public function delete($data)

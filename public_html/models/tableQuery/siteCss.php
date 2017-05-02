@@ -55,4 +55,11 @@ class siteCss extends crud
 		$style->execute($data);
 		return $style->fetchAll(\PDO::FETCH_ASSOC);
 	}
+
+    public function readUnique($data)
+    {
+        $style = $this->db->prepare("SELECT * FROM `{$this->_table}` WHERE id_site=:id_site AND id_tag=:id_tag AND selector=:selector");
+        $style->execute($data);
+        return $style->fetch(\PDO::FETCH_ASSOC);
+    }
 }

@@ -135,7 +135,7 @@ class siteTags extends crud
 
 		$this->_update = $this->db->prepare("UPDATE `{$this->_table}` SET index_tag=:index_tag, parent_tag=:parent_tag WHERE id_site='{$this->_id_site}' AND id_tag=:id_tag");
 		$result = $this->_update->execute($data);
-		return ($result == 1)?true:false;
+		return ($result == 1)?1:0;
 	}
 
 	public function updateIncIndex($data)

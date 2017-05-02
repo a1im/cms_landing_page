@@ -1,10 +1,7 @@
 <?php
-
 namespace alimmvc\public_html\controllers\editor;
 
-use alimmvc\core\controllers;
 use alimmvc\core\registry;
-use alimmvc\core\fields;
 use alimmvc\public_html\models\tableQuery\siteTags;
 use alimmvc\public_html\models\tableQuery\siteCss;
 use alimmvc\public_html\models\tableQuery\site;
@@ -14,65 +11,70 @@ use alimmvc\public_html\models\saveSite;
 
 class siteController extends authController
 {
-	protected $layout = "empty";
+    protected $layout = "empty";
 
-	protected function init()
-	{
-		registry::app()->siteCrud = new site(registry::app()->db);
-	}
+    protected function init()
+    {
+        registry::app()->siteCrud = new site(registry::app()->db);
+    }
 
-	// редактор
-	public function actionEdit($id_site)
-	{
-		registry::app()->siteTagsCrud = new siteTags(registry::app()->db, registry::app()->user['id_user'], $id_site);
-		registry::app()->siteCssCrud = new siteCss(registry::app()->db, registry::app()->user['id_user'], $id_site);
-		$tags = registry::app()->siteTagsCrud->reads();
-		$styles = registry::app()->siteCssCrud->reads();
-		// объединим стили для для одного тега
-		$styles2 = [];
-		foreach ($styles as $value) {
-			$val = $value['selector'];
-			if (preg_match('|\*\[id=\'.*\'\]|ui', $val))
-			{
-				$val = preg_replace('|\*\[id=\'|ui', '', $val);
-				$val = preg_replace('|\'\].*|ui', '', $val);
-			}
-			if (isset($styles2[$val])) 
-			{
-				$styles2[$val]['styles'] .= "{$value['selector']}{{$value['style']}}";
-			}
-			else {
+    public function asb(int $fff) : int
+    {
+        return 3;
+    }
 
-				$styles2[$val]['id_tag'] = $val;
-				// $styles2[$value['selector']]['id_tag'] = $value['id_tag'];
-				$styles2[$val]['styles'] = "{$value['selector']}{{$value['style']}}";
-			}
-		}
-		
-		$dataSite = registry::app()->siteCrud->read([
-			'id_user' => registry::app()->user['id_user'], 
-			'id_site' => $id_site,
-			]);
+    // редактор
+    public function actionEdit($id_site)
+    {
+        registry::app()->siteTagsCrud = new siteTags(registry::app()->db, registry::app()->user['id_user'], $id_site);
+        registry::app()->siteCssCrud = new siteCss(registry::app()->db, registry::app()->user['id_user'], $id_site);
+        $tags = registry::app()->siteTagsCrud->reads();
+        $styles = registry::app()->siteCssCrud->reads();
+        // объединим стили для для одного тега
+        $styles2 = [];
+        foreach ($styles as $value) {
+            $val = $value['selector'];
+            if (preg_match('|\*\[id=\'.*\'\]|ui', $val))
+            {
+                $val = preg_replace('|\*\[id=\'|ui', '', $val);
+                $val = preg_replace('|\'\].*|ui', '', $val);
+            }
+            if (isset($styles2[$val]))
+            {
+                $styles2[$val]['styles'] .= "{$value['selector']}{{$value['style']}}";
+            }
+            else {
 
-		if (empty($dataSite))
-		{
-			debug("error");
-			return ;
-		}
+                $styles2[$val]['id_tag'] = $val;
+                // $styles2[$value['selector']]['id_tag'] = $value['id_tag'];
+                $styles2[$val]['styles'] = "{$value['selector']}{{$value['style']}}";
+            }
+        }
 
-		return $this->render('index', [
-			'title' => 'Вошли',
-			'tags' => $tags,
-			'styles' => $styles2,
-			'id_site' => $id_site,
-			'dataSite' => $dataSite,
-			'urlAction' => registry::app()->router->_url_action,
-			'urlController' => registry::app()->router->_url_controller,
-			]);
-	}
-	
-	// добавить HTML код на сайт
-	public function actionAddHtml($id_site, $nameTemplate, $parent_tag = 0, $index_tag = 0)
+        $dataSite = registry::app()->siteCrud->read([
+            'id_user' => registry::app()->user['id_user'],
+            'id_site' => $id_site,
+        ]);
+
+        if (empty($dataSite))
+        {
+            debug("error");
+            return false;
+        }
+
+        return $this->render('index', [
+            'title' => 'Вошли',
+            'tags' => $tags,
+            'styles' => $styles2,
+            'id_site' => $id_site,
+            'dataSite' => $dataSite,
+            'urlAction' => registry::app()->router->_url_action,
+            'urlController' => registry::app()->router->_url_controller,
+        ]);
+    }
+
+    // добавить HTML код на сайт
+    public function actionAddHtml($id_site, $nameTemplate, $parent_tag = 0, $index_tag = 0)
 	{
 		registry::app()->siteTagsCrud = new siteTags(registry::app()->db, registry::app()->user['id_user'], $id_site);
 		$tagsData = parsHtmlCssJs::parsHtml($id_site, $nameTemplate, $parent_tag, $index_tag);
@@ -149,11 +151,11 @@ class siteController extends authController
 		registry::app()->siteTagsCrud = new siteTags(registry::app()->db, registry::app()->user['id_user'], getPost('id_site'));
 
 		// сделать добавление в базу через 1 запрос для скорости
-		registry::app()->siteTagsCrud->updateIndexTag([
+		debug(registry::app()->siteTagsCrud->updateIndexTag([
 			'id_tag' => getPost('id_tag'),
 			'index_tag' => getPost('index_tag'),
 			'parent_tag' => getPost('parent_tag'),
-			]);
+			]));
 		echo getPost('id_site') . " " . getPost('index_tag') . " " . getPost('parent_tag');
 	}
 
@@ -204,11 +206,18 @@ class siteController extends authController
 		{
 			foreach ($cssData as $data)
 			{
-				// если не получилось добавить обновим css
-				if (registry::app()->siteCssCrud->create($data) != 1)
+				// если не получилось обновить добавим css
+				if (empty(registry::app()->siteCssCrud->readUnique([
+                        'id_site' => $data['id_site'],
+                        'id_tag' => $data['id_tag'],
+                        'selector' => $data['selector'],
+                    ])))
 				{
-					registry::app()->siteCssCrud->update($data);
-				}
+                    registry::app()->siteCssCrud->create($data);
+                    debug($data);
+				} else {
+                    registry::app()->siteCssCrud->update($data);
+                }
 			}
 		}
 	}
@@ -277,7 +286,7 @@ class siteController extends authController
 			$filetowrite = $imageFolder . $filename;
 			if (move_uploaded_file($temp['tmp_name'], $filetowrite))
 			{
-				@unlink($files['tmp_name']);
+				@unlink($temp['tmp_name']);
 			}
 
 			// Respond to the successful upload with JSON.
@@ -303,7 +312,7 @@ class siteController extends authController
 		{
 			// отдаём файл на скачивание
 			header('Content-type: application/zip');
-			// header('Content-Disposition: attachment; filename="site_' . $id_site . '.zip"');
+            header('Content-Disposition: attachment; filename="site_' . $id_site . '.zip"');
 			readfile($pathFile);
 			// // удаляем zip файл если он существует
 			unlink($pathFile);

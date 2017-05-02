@@ -8,9 +8,10 @@ abstract class controllers
 
 	public function __construct()
 	{
-		//путь до текущего контроллера от папки контроллер
-		$pathController = preg_replace("|[\\\\/]|i", DIRSEP, get_class($this));
-		$pathController = preg_replace("|^.*(" . registry::app()->dir_controllers . DIRSEP . ")|i", '', $pathController);
+		//изменяем на правильные слеши чтобы небыло конфликтов
+		$pathController = preg_replace("|[\\\\/]|i", '/', get_class($this));
+		$dir_controller = preg_replace("|[\\\\/]|i",'/',registry::app()->dir_controllers);
+		$pathController = preg_replace("|^.*(" . $dir_controller . ").|i", '', $pathController);
 		registry::app()->dir_views_controller = registry::app()->dir_views . DIRSEP . $pathController;
 		$this->init();
 	}
@@ -27,5 +28,7 @@ abstract class controllers
 		
 		// include registry::app()->dir_views . DIRSEP . get_class($this) . DIRSEP . $file_action . ".php";		
 		require_once(registry::app()->dir_views_layouts . DIRSEP . $this->layout . ".php");
+
+		return 1;
 	}
 }

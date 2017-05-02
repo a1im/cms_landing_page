@@ -58,7 +58,7 @@ Class router
             if (is_dir($tmp_route)) 
             {
                 $dir_route .= DIRECTORY_SEPARATOR . $route;
-                $url_route .= DIRECTORY_SEPARATOR . $route;
+                $url_route .= "/$route";
                 array_shift($routes);
                 continue;
             }
@@ -67,14 +67,14 @@ Class router
             if (is_file($tmp_route . self::POSTFIX_CONTROLLER . '.php')) 
             {
                 $this->_controller = $route . self::POSTFIX_CONTROLLER;
-                $url_route .= DIRECTORY_SEPARATOR . $route;
+                $url_route .= "/$route";
                 array_shift($routes);
                 break;
             }
         }
 
         //если url контроллера не изменился то добавляем стандартный
-        if ($url_route == SITE_URL_NAME . DIRECTORY_SEPARATOR)
+        if ($url_route == SITE_URL_NAME . "/")
         {
             $url_route .= preg_replace("/(" . self::POSTFIX_CONTROLLER . ")$/i", '', $this->_controller);;
         }
@@ -88,10 +88,10 @@ Class router
         if (!empty($action)) 
         {
             $this->_action = self::PREFIX_ACTION . $action;
-            $url_route .= DIRECTORY_SEPARATOR . $action;
+            $url_route .= "/$action";
         } else {
             //убираем префикс и добавляем action  к url
-            $url_route .= DIRECTORY_SEPARATOR . preg_replace("/^(" . self::PREFIX_ACTION . ")/i", '', $this->_action);
+            $url_route .= "/" . preg_replace("/^(" . self::PREFIX_ACTION . ")/i", '', $this->_action);
         }
 
         $this->_dir_file = $dir_route . DIRECTORY_SEPARATOR . $this->_controller . '.php';
@@ -116,7 +116,7 @@ Class router
         // Файл доступен?
         if (!is_readable($this->_dir_file)) 
         {
-			debug($this->_dir_file);
+//			debug($this->_dir_file);
             header("Location: /err/404.php");
         }
 
@@ -133,7 +133,7 @@ Class router
         // Действие доступно?
         if (!is_callable(array($controller, $this->_action))) 
         {
-			debug($this->_action);
+//			debug($this->_action);
             header("Location: /err/404.php");
         }
 
@@ -143,14 +143,10 @@ Class router
         $countRequiredParamRef  = $methodRef->getNumberOfRequiredParameters();
         $countParamRef  = $methodRef->getNumberOfParameters();
 
-        if (sizeof($this->_args) < $countRequiredParamRef)
+        // проверка на кол-во аргументов принимаемых методом
+        if (sizeof($this->_args) < $countRequiredParamRef && sizeof($this->_args) > $countParamRef)
         {
-            die ('Not filled required parameters');
-        }
-
-        if (sizeof($this->_args) > $countParamRef)
-        {
-            debug(sizeof($this->_args));
+//            die ('Not filled required parameters');
             header("Location: /err/404.php");
         }
 

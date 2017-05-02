@@ -23,7 +23,7 @@ class saveSite extends models
 		if (empty($dataSite))
 		{
 			// debug("error");
-			return ;
+			return false;
 		}
 
 		// запиываем сайт в файл
@@ -53,13 +53,15 @@ class saveSite extends models
 		{
 			$fileHandle = registry::app()->path_save_site . DIRSEP . "head.html";
 			$fp = fopen($path_save . DIRSEP . "index.html", "w");
+			// загрузка Head
 			$fpHead = fopen($fileHandle, "r");
+            $title = isset($dataSite['title'])?$dataSite['title']:"";
 			// загрузим сайт
 			$printTags = new siteTagsPrint();
-			$title = isset($dataSite['title'])?$dataSite['title']:"";
-			$html_site = "<html>\n";
-			$html_site .= fread($fpHead, filesize($fileHandle));
-			$html_site .= "<body>\n";
+			$html_site = "<html>\n<head>\n";
+            $html_site .= "<title>$title</title>";
+            $html_site .= fread($fpHead, filesize($fileHandle));
+			$html_site .= "</head>\n<body>\n";
 			$html_site .= "<content id='site-content'>\n";
 			$html_site .= $printTags->freePrint($tags);
 			$html_site .= "</content>\n";
@@ -161,7 +163,7 @@ class saveSite extends models
 				if($zip->open($path_zip . DIRSEP . $zip_name, \ZIPARCHIVE::CREATE)!==TRUE)
 				{
 					// debug("error - create ZIP");
-					return ;
+					return false;
 				}
 				self::addDir($path, $id_site, $zip);
 				$zip->close();
@@ -176,7 +178,7 @@ class saveSite extends models
 				// 	unlink($path_zip . DIRSEP . $zip_name);
 				// }
 			} else {
-				return ;
+				return false;
 			}
 			// debug("zip");
 		}

@@ -27,20 +27,23 @@ $(document).ready(function()
 
 function scrollMove(val) 
 {
-	if ($('.alm-elem-menu').length <= 0) return ;
+	var menu = $('.alm-elem-menu');
+	if (menu.length <= 0) return ;
 
-	var newTop = val.scrollTop() - $(".alm-elem-menu").parent()[0].offsetTop;
+	var newTop = val.scrollTop() - menu.parent()[0].offsetTop;
 	if (newTop > 600) {
-		$(".alm-elem-menu").stop(true).animate({'top': newTop}, 300);
+        menu.stop(true).animate({'top': newTop}, 300);
 	} else {
-		$(".alm-elem-menu").stop(true).animate({'top': 0}, 300);
+        menu.stop(true).animate({'top': 0}, 300);
 	}
 }
 
 function updateMenu() 
 {
+    var menu = $('.alm-elem-menu');
+    menu.appendTo(menu.parent());
 	var aStyle='', li_a = $('.alm-elem-menu ul.nav li a').eq(0);
-	if (li_a.attr('style') != undefined) {
+	if (li_a.attr('style') !== undefined) {
 		aStyle = "style='" + li_a.attr('style') + "'";
 	}
 	// console.log($('.alm-elem-menu ul.nav li a').attr('style'));
@@ -48,7 +51,7 @@ function updateMenu()
 	$('.alm-elem-block-screen').each(function() {
 		var id = $(this).attr('id');
 		var name = $(this).attr('name-block');
-		if (name != undefined && name != '') {
+		if (name !== undefined && name !== '') {
 			$('.alm-elem-menu ul.nav').append("<li role='presentation'><a href='#"+id+"' "+aStyle+">"+name+"</a></li>");
 		}
 		// console.log($(this).attr('name-block'));
@@ -64,13 +67,13 @@ function ajaxSubmit(form)
 		arrFields = [],
 		formTheme = "";
 
-	if (form.attr('theme') != undefined) formTheme = form.attr('theme');
+	if (form.attr('theme') !== undefined) formTheme = form.attr('theme');
 
 	field.each(function() {
 		var type = $(this).attr('type');
-		if (type != 'submit' && type != 'reset' && type != 'button') {
+		if (type !== 'submit' && type !== 'reset' && type !== 'button') {
 			var name = $(this).attr('name');
-			if (name == undefined) name = "";
+			if (name === undefined) name = "";
 			else name += ": ";
 			arrFields.push(name + $(this).val());
 		}

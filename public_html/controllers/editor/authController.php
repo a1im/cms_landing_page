@@ -37,6 +37,9 @@ class authController extends controllers
 		}
 	}
 
+    /**
+     * goto editor
+     */
 	public function actionIndex()
 	{
 		// убираем контроллер
@@ -143,4 +146,9 @@ class authController extends controllers
 			'form' => $form->getHtml(),
 			]);
 	}
+
+    protected function init()
+    {
+        // TODO: Implement init() method.
+    }
 }

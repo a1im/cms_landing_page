@@ -5,14 +5,11 @@ var option_elem = null,
 	coefShift = 0;
 
 
-
 $(document).ready(function() 
 {
 	// присвоим перемещение элеента
 	setDAD();
 	hideAddMenu();
-
-	// console.log(location.origin);
 
 	$(window).scroll(function(){
 		setInterval( optionMove, 500 );
@@ -47,8 +44,8 @@ $(document).ready(function()
 			// сохранения видимости опций
 			if (save_elem == null)
 			{
+                hideAll();
 				elemClickStyle($(this));
-				$('.alm-popup').hide();
 			} else {
 				// если кликнули второй раз тудаже то отменяем выделения
 				if (save_elem.attr("id") == $(this).attr("id"))
@@ -57,9 +54,10 @@ $(document).ready(function()
 					// elemOverStyle($(this));
 				} else {
 					// иначе выделяем другой блок
+                    hideAll();
 					elemNoneStyle();
 					elemOverStyle($(this));
-					$('.alm-popup').hide();
+
 				}
 			}
 			// скрыть все окна при клике на элементы
@@ -68,6 +66,7 @@ $(document).ready(function()
 			// option_elem = $(this);
 		}
 	});
+
 	// Отпустить нажатия
 	$("body").on("mouseup", "*[class|='alm-elem'], #alm-option .glyphicon", function() {
 		is_click = false;
@@ -363,6 +362,10 @@ $(document).ready(function()
 
 function hideAll()
 {
+    if ($('#popup-edit').is(':visible')) {
+        console.log('hide2');
+        postSaveCssSelector(option_elem);
+    }
 	$('#popup-add').hide();
 	$('#popup-edit-text').hide();
 	$('#popup-edit').hide();
@@ -470,7 +473,7 @@ function setInputValue(elem)
 			thisElem.eq(0).val('rgb(255,255,255)');
 			thisElem.eq(1).val(1);
 		}
-		console.log(elem.attr('edit-style') + " : " + valueElem);
+		// console.log(elem.attr('edit-style') + " : " + valueElem);
 	} else {
 		if (elem.attr('edit-style') == 'font-family') {
 			valueElem = valueElem.replace(new RegExp(", ", 'igm'), ',');
@@ -601,14 +604,18 @@ function postSaveContent(elem)
 
 function postSaveParent(elem)
 {
+    var id = parseInt(elem.parent().attr('id'));
+    id = isNaN(id)?0:id;
+    console.log(id);
+
 	$("#loader").show();
 	$.post(location.origin+'/editor/site/updateTagIndex', { 
 			id_tag: elem.attr('id'),
 			id_site: $("#id-site").html(), 
 			index_tag: elem.index() + 1, 
-			parent_tag: elem.parent().attr('id') 
+			parent_tag: id
 		}
-		// ,function(data) {console.log(data);}
+		,function(data) {console.log(data);}
 	)
 	.done(function() { $("#loader").hide(); })
 	.fail(function() { $("#loader").hide(); });
@@ -631,14 +638,16 @@ function postSaveTagSelector(elem, selector)
 function postSaveCssSelector(elem)
 {
 	var styles_send = getFindAttr('style', 'id-tag', elem.attr('id'));
-	if (styles_send != null) {
+	if (styles_send != null)
+    {
+	    console.log('save');
 		$("#loader").show();
 		$.post(location.origin + '/editor/site/updateCssSelector/', { 
 				id_tag: elem.attr('id'),
 				id_site: $("#id-site").html(),
 				styles: styles_send.html()
 			}
-			// ,function(data) {console.log(data);}
+			,function(data) {console.log(data);}
 		)
 		.then(function() { $("#loader").hide(); })
 		.done(function() { $("#loader").hide(); })
@@ -830,10 +839,10 @@ function almRessizeAll(elem)
 	});
 }
 
-function almRessizeNS(elem)
+function almRessizeS(elem)
 {
 	elem.resizable({
-		handles: "n, s",
+		handles: "s",
 		resize: function() {
 			$(this).css({top:0,left:0,bottom:0,right:0})
 		},
@@ -868,12 +877,14 @@ function colorPickerOnShow(colpkr) {
 	$(colpkr).fadeIn(200);
 	return false;
 }
+
 function colorPickerOnHide(colpkr) {
 	// postSaveStyle(option_elem);
 	postSaveCssSelector(option_elem);
 	$(colpkr).fadeOut(200);
 	return false;
 }
+
 function colorPickerOnSubmit(hsb, hex, rgb, el) {
 	$(el).ColorPickerHide();
 	postSaveCssSelector(option_elem);
@@ -1055,7 +1066,7 @@ function setDAD()
 	});
 	almDroppable($(".alm-elem-block-screen-content, .alm-elem-block, .alm-elem-menu, .alm-elem-form"));
 	almRessizeAll($(".alm-elem-block, .alm-elem-form, .alm-elem-input"));
-	almRessizeNS($(".alm-elem-block-screen"));
+	almRessizeS($(".alm-elem-block-screen"));
 	almRessizeEW($(".alm-elem-block-screen-content"));
 }
 

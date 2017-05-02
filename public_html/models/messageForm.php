@@ -7,8 +7,8 @@ use alimmvc\core\registry;
 
 class messageForm extends models
 {
-	
-	public function insertMessage($values)
+
+    public function insertMessage($values)
 	{
 		$date = date('c');
 		$insert = registry::app()->dbform->prepare("INSERT INTO message (`name`,`email`,`date`,`avatar`,`message`) VALUES (:name,:email,'$date',:avatar,:text)");
